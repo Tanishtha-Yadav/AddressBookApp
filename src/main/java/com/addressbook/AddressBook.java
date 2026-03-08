@@ -1,6 +1,7 @@
 package com.addressbook;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +17,7 @@ public class AddressBook {
     }
 
     public boolean addContact(ContactPerson contact) {
-        boolean exists = contacts.stream()
-                .anyMatch(c -> c.equals(contact));
+        boolean exists = contacts.stream().anyMatch(c -> c.equals(contact));
         if (exists) {
             System.out.println("Duplicate contact! " + contact.getFirstName() + " " + contact.getLastName());
             return false;
@@ -27,17 +27,11 @@ public class AddressBook {
         return true;
     }
 
-    // UC8: Search by city
-    public List<ContactPerson> searchByCity(String city) {
+    // UC11: Get contacts sorted by FirstName then LastName
+    public List<ContactPerson> getSortedContacts() {
         return contacts.stream()
-                .filter(c -> c.getCity().equalsIgnoreCase(city))
-                .toList();
-    }
-
-    // UC8: Search by state
-    public List<ContactPerson> searchByState(String state) {
-        return contacts.stream()
-                .filter(c -> c.getState().equalsIgnoreCase(state))
-                .toList();
+                .sorted(Comparator.comparing(ContactPerson::getFirstName)
+                        .thenComparing(ContactPerson::getLastName))
+                .collect(Collectors.toList());
     }
 }

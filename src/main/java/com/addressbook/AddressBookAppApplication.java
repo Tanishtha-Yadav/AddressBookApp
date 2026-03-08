@@ -1,36 +1,36 @@
 package com.addressbook;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Scanner;
 
 public class AddressBookAppApplication {
     public static void main(String[] args) {
-        Map<String, AddressBook> addressBooks = new HashMap<>();
+        AddressBook addressBook = new AddressBook();
+        Scanner sc = new Scanner(System.in);
 
-        AddressBook familyBook = new AddressBook();
-        familyBook.addContact(new ContactPerson("Alice", "Smith", "12 Main St", "CityA", "StateX", "12345", "9999999999", "alice@example.com"));
-        familyBook.addContact(new ContactPerson("Bob", "Jones", "34 Oak St", "CityB", "StateY", "67890", "8888888888", "bob@example.com"));
-        addressBooks.put("Family", familyBook);
+        System.out.println("--- UC11: Sort Contacts Alphabetically ---");
 
-        AddressBook friendsBook = new AddressBook();
-        friendsBook.addContact(new ContactPerson("Charlie", "Brown", "56 Pine St", "CityA", "StateZ", "11111", "7777777777", "charlie@example.com"));
-        friendsBook.addContact(new ContactPerson("David", "Lee", "78 Maple St", "CityC", "StateX", "22222", "6666666666", "david@example.com"));
-        addressBooks.put("Friends", friendsBook);
+        boolean addMore = true;
+        while (addMore) {
+            System.out.print("First Name: "); String fn = sc.nextLine();
+            System.out.print("Last Name: "); String ln = sc.nextLine();
+            System.out.print("Address: "); String addr = sc.nextLine();
+            System.out.print("City: "); String city = sc.nextLine();
+            System.out.print("State: "); String state = sc.nextLine();
+            System.out.print("Zip: "); String zip = sc.nextLine();
+            System.out.print("Phone: "); String phone = sc.nextLine();
+            System.out.print("Email: "); String email = sc.nextLine();
 
-        // Count by City
-        Map<String, Long> countByCity = addressBooks.values().stream()
-                .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getCity, Collectors.counting()));
+            ContactPerson contact = new ContactPerson(fn, ln, addr, city, state, zip, phone, email);
+            addressBook.addContact(contact);
 
-        // Count by State
-        Map<String, Long> countByState = addressBooks.values().stream()
-                .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getState, Collectors.counting()));
+            System.out.print("Add another contact? (yes/no): ");
+            String ans = sc.nextLine().trim().toLowerCase();
+            if (!ans.equals("yes")) addMore = false;
+        }
 
-        System.out.println("--- Count of Persons by City ---");
-        countByCity.forEach((city, count) -> System.out.println(city + ": " + count));
+        System.out.println("\n--- Sorted Contacts ---");
+        addressBook.getSortedContacts().forEach(System.out::println);
 
-        System.out.println("\n--- Count of Persons by State ---");
-        countByState.forEach((state, count) -> System.out.println(state + ": " + count));
+        sc.close();
     }
 }
