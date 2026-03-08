@@ -27,11 +27,32 @@ public class AddressBook {
         return true;
     }
 
-    // UC11: Get contacts sorted by FirstName then LastName
+    // UC12: Sort by FirstName then LastName (reused from UC11)
     public List<ContactPerson> getSortedContacts() {
         return contacts.stream()
                 .sorted(Comparator.comparing(ContactPerson::getFirstName)
                         .thenComparing(ContactPerson::getLastName))
+                .collect(Collectors.toList());
+    }
+
+    // UC12: Sort by City
+    public List<ContactPerson> getSortedByCity() {
+        return contacts.stream()
+                .sorted(Comparator.comparing(ContactPerson::getCity))
+                .collect(Collectors.toList());
+    }
+
+    // UC12: Sort by State
+    public List<ContactPerson> getSortedByState() {
+        return contacts.stream()
+                .sorted(Comparator.comparing(ContactPerson::getState))
+                .collect(Collectors.toList());
+    }
+
+    // UC12: Sort by Zip
+    public List<ContactPerson> getSortedByZip() {
+        return contacts.stream()
+                .sorted(Comparator.comparing(ContactPerson::getZip))
                 .collect(Collectors.toList());
     }
 }

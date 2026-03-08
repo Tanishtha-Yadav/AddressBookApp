@@ -1,5 +1,6 @@
 package com.addressbook;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class AddressBookAppApplication {
@@ -7,7 +8,7 @@ public class AddressBookAppApplication {
         AddressBook addressBook = new AddressBook();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- UC11: Sort Contacts Alphabetically ---");
+        System.out.println("--- UC12: Sort Contacts by City, State, or Zip ---");
 
         boolean addMore = true;
         while (addMore) {
@@ -28,8 +29,23 @@ public class AddressBookAppApplication {
             if (!ans.equals("yes")) addMore = false;
         }
 
+        System.out.print("\nSort by (name/city/state/zip): ");
+        String choice = sc.nextLine().trim().toLowerCase();
+
+        List<ContactPerson> sortedList;
+        switch (choice) {
+            case "name" -> sortedList = addressBook.getSortedContacts();
+            case "city" -> sortedList = addressBook.getSortedByCity();
+            case "state" -> sortedList = addressBook.getSortedByState();
+            case "zip" -> sortedList = addressBook.getSortedByZip();
+            default -> {
+                System.out.println("Invalid choice. Sorting by name.");
+                sortedList = addressBook.getSortedContacts();
+            }
+        }
+
         System.out.println("\n--- Sorted Contacts ---");
-        addressBook.getSortedContacts().forEach(System.out::println);
+        sortedList.forEach(System.out::println);
 
         sc.close();
     }
