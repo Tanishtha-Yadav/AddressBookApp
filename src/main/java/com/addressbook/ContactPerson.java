@@ -1,6 +1,6 @@
 package com.addressbook;
 
-public class Contact {
+public class ContactPerson {
     private String firstName;
     private String lastName;
     private String address;
@@ -10,8 +10,8 @@ public class Contact {
     private String phoneNumber;
     private String email;
 
-    public Contact(String firstName, String lastName, String address, String city, String state,
-                   String zip, String phoneNumber, String email) {
+    public ContactPerson(String firstName, String lastName, String address, String city,
+                         String state, String zip, String phoneNumber, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -22,7 +22,7 @@ public class Contact {
         this.email = email;
     }
 
-    // Getters only (optional for UC1)
+    // Getters
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
     public String getAddress() { return address; }
@@ -31,4 +31,9 @@ public class Contact {
     public String getZip() { return zip; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getEmail() { return email; }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName + " | " + phoneNumber + " | " + email;
+    }
 }

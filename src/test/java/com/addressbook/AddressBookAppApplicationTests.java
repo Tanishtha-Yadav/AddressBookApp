@@ -15,17 +15,28 @@ class AddressBookAppApplicationTests {
     }
 
     @Test
-    void testAddContact() {
-        Contact c = new Contact(
-                "John", "Doe", "123 Street", "City", "State",
-                "11111", "9999999999", "john@example.com"
+    void testAddSingleContact() {
+        ContactPerson contact = new ContactPerson(
+                "Alice", "Smith", "12 Main St", "City", "State", "12345", "9999999999", "alice@example.com"
         );
 
-        addressBook.addContact(c);
+        addressBook.addContact(contact);
 
-        List<Contact> contacts = addressBook.getContacts();
+        List<ContactPerson> contacts = addressBook.getContacts();
         assertEquals(1, contacts.size());
-        assertEquals("John", contacts.get(0).getFirstName());
-        assertEquals("Doe", contacts.get(0).getLastName());
+        assertEquals("Alice", contacts.get(0).getFirstName());
+    }
+
+    @Test
+    void testAddMultipleContacts() {
+        ContactPerson c1 = new ContactPerson("Bob", "Jones", "34 Oak St", "City", "State", "67890", "8888888888", "bob@example.com");
+        ContactPerson c2 = new ContactPerson("Carol", "Lee", "56 Pine St", "City", "State", "11223", "7777777777", "carol@example.com");
+
+        addressBook.addContact(c1);
+        addressBook.addContact(c2);
+
+        List<ContactPerson> contacts = addressBook.getContacts();
+        assertEquals(2, contacts.size());
+        assertEquals("Carol", contacts.get(1).getFirstName());
     }
 }

@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddressBook {
-    private List<Contact> contacts = new ArrayList<>();
+    private List<ContactPerson> contacts;
 
-    // Only add contact feature
-    public void addContact(Contact contact) {
-        contacts.add(contact);
-        System.out.println("Contact added successfully!");
+    public AddressBook() {
+        contacts = new ArrayList<>();
     }
 
-    // Getter for test purposes
-    public List<Contact> getContacts() {
+    public void addContact(ContactPerson contact) {
+        contacts.add(contact);
+        System.out.println("Contact added successfully: " + contact.getFirstName() + " " + contact.getLastName());
+    }
+
+    public List<ContactPerson> getContacts() {
         return contacts;
     }
 }
