@@ -2,6 +2,7 @@ package com.addressbook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 public class AddressBook {
     private List<ContactPerson> contacts;
@@ -19,7 +20,7 @@ public class AddressBook {
         return contacts;
     }
 
-    // UC3: Edit existing contact by first name
+    // Edit by first name (UC3)
     public boolean editContactByFirstName(String firstName, ContactPerson newDetails) {
         for (ContactPerson c : contacts) {
             if (c.getFirstName().equalsIgnoreCase(firstName)) {
@@ -35,6 +36,20 @@ public class AddressBook {
                 return true;
             }
         }
-        return false; // contact not found
+        return false;
+    }
+
+    // UC4: Delete by first name
+    public boolean deleteContactByFirstName(String firstName) {
+        Iterator<ContactPerson> iterator = contacts.iterator();
+        while (iterator.hasNext()) {
+            ContactPerson c = iterator.next();
+            if (c.getFirstName().equalsIgnoreCase(firstName)) {
+                iterator.remove();
+                System.out.println("Contact deleted successfully: " + firstName);
+                return true;
+            }
+        }
+        return false;
     }
 }
