@@ -10,12 +10,22 @@ public class AddressBook {
         contacts = new ArrayList<>();
     }
 
-    public void addContact(ContactPerson contact) {
-        contacts.add(contact);
-        System.out.println("Contact added successfully: " + contact.getFirstName() + " " + contact.getLastName());
-    }
-
     public List<ContactPerson> getContacts() {
         return contacts;
+    }
+
+    // Add contact with duplicate check
+    public boolean addContact(ContactPerson contact) {
+        boolean exists = contacts.stream()
+                .anyMatch(c -> c.equals(contact)); // Uses equals override
+
+        if (exists) {
+            System.out.println("Duplicate contact! " + contact.getFirstName() + " " + contact.getLastName());
+            return false;
+        }
+
+        contacts.add(contact);
+        System.out.println("Contact added successfully: " + contact.getFirstName() + " " + contact.getLastName());
+        return true;
     }
 }
