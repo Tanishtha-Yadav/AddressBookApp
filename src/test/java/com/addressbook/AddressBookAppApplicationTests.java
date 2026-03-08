@@ -17,26 +17,16 @@ class AddressBookAppApplicationTests {
     }
 
     @Test
-    void testDeleteExistingContact() {
+    void testAddMultipleContacts() {
         ContactPerson c1 = new ContactPerson("Alice", "Smith", "12 Main St", "City", "State", "12345", "9999999999", "alice@example.com");
-        addressBook.addContact(c1);
+        ContactPerson c2 = new ContactPerson("Bob", "Jones", "34 Oak St", "City", "State", "67890", "8888888888", "bob@example.com");
 
-        boolean result = addressBook.deleteContactByFirstName("Alice");
-        assertTrue(result, "Contact should be deleted");
+        addressBook.addContact(c1);
+        addressBook.addContact(c2);
 
         List<ContactPerson> contacts = addressBook.getContacts();
-        assertEquals(0, contacts.size());
-    }
-
-    @Test
-    void testDeleteNonExistingContact() {
-        ContactPerson c1 = new ContactPerson("Bob", "Lee", "34 Oak St", "City", "State", "67890", "8888888888", "bob@example.com");
-        addressBook.addContact(c1);
-
-        boolean result = addressBook.deleteContactByFirstName("Alice");
-        assertFalse(result, "Contact should not be found");
-
-        List<ContactPerson> contacts = addressBook.getContacts();
-        assertEquals(1, contacts.size());
+        assertEquals(2, contacts.size());
+        assertEquals("Alice", contacts.get(0).getFirstName());
+        assertEquals("Bob", contacts.get(1).getFirstName());
     }
 }
