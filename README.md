@@ -1,14 +1,14 @@
-# AddressBookApp - UC7: Prevent Duplicate Contacts
+# AddressBookApp - UC8: Search Person by City or State
 
 ## Overview
-UC7 extends previous UCs by **preventing duplicate contacts** in an AddressBook.  
-- Duplicate check is based on **first + last name**  
-- **Java Streams** and `equals()` method are used to detect duplicates  
+UC8 extends previous UCs by **searching for a person by city or state across multiple AddressBooks**.  
+- Search can return **multiple contacts** in the same city or state.  
+- Uses **Java Streams** for filtering.
 
 ---
 
 ## Notes
 
-- UC7 **reuses previous code**  
-- Supports **in-memory duplicate prevention**  
-- Future UCs will integrate **multiple AddressBooks and persistence**
+- UC8 **reuses previous code**  
+- Supports **in-memory search across multiple AddressBooks**  
+- Future UCs will integrate **more advanced queries and persistence**
