@@ -1,12 +1,14 @@
-# AddressBookApp - UC4: Delete ContactPerson
+# AddressBookApp - UC5: Add Multiple Contacts
 
 ## Overview
-UC4 extends UC3 by adding the **ability to delete an existing contact** by first name using console input.
+UC5 extends previous UCs by adding the **ability to add multiple persons** to the AddressBook using console input.  
+Contacts are maintained using a **Collection class (List)**.
 
 ---
 
 ## Notes
 
-- UC4 **reuses UC3 code**  
-- Supports deleting **in-memory contacts** only  
-- Future UCs will add **search, display, and persistence**
+- UC5 **reuses previous code**  
+- Supports **multiple in-memory contacts**  
+- Contacts are added **one at a time** via console input  
+- Future UCs will add **search, edit, delete, and persistence**
