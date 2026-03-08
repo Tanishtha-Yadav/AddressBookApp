@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 public class AddressBookAppApplication {
     public static void main(String[] args) {
-        // Sample AddressBooks with contacts
         Map<String, AddressBook> addressBooks = new HashMap<>();
 
         AddressBook familyBook = new AddressBook();
@@ -18,36 +17,20 @@ public class AddressBookAppApplication {
         friendsBook.addContact(new ContactPerson("David", "Lee", "78 Maple St", "CityC", "StateX", "22222", "6666666666", "david@example.com"));
         addressBooks.put("Friends", friendsBook);
 
-        // Build City → Persons map
-        Map<String, List<ContactPerson>> cityMap = addressBooks.values().stream()
+        // Count by City
+        Map<String, Long> countByCity = addressBooks.values().stream()
                 .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getCity));
+                .collect(Collectors.groupingBy(ContactPerson::getCity, Collectors.counting()));
 
-        // Build State → Persons map
-        Map<String, List<ContactPerson>> stateMap = addressBooks.values().stream()
+        // Count by State
+        Map<String, Long> countByState = addressBooks.values().stream()
                 .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getState));
+                .collect(Collectors.groupingBy(ContactPerson::getState, Collectors.counting()));
 
-        Scanner sc = new Scanner(System.in);
-        System.out.print("View by City or State? (city/state): ");
-        String choice = sc.nextLine().trim().toLowerCase();
+        System.out.println("--- Count of Persons by City ---");
+        countByCity.forEach((city, count) -> System.out.println(city + ": " + count));
 
-        if (choice.equals("city")) {
-            System.out.println("\nPersons by City:");
-            cityMap.forEach((city, persons) -> {
-                System.out.println("City: " + city);
-                persons.forEach(p -> System.out.println("  " + p));
-            });
-        } else if (choice.equals("state")) {
-            System.out.println("\nPersons by State:");
-            stateMap.forEach((state, persons) -> {
-                System.out.println("State: " + state);
-                persons.forEach(p -> System.out.println("  " + p));
-            });
-        } else {
-            System.out.println("Invalid choice.");
-        }
-
-        sc.close();
+        System.out.println("\n--- Count of Persons by State ---");
+        countByState.forEach((state, count) -> System.out.println(state + ": " + count));
     }
 }

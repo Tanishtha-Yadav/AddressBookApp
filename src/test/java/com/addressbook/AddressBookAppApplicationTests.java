@@ -3,7 +3,8 @@ package com.addressbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,26 +29,26 @@ class AddressBookAppApplicationTests {
     }
 
     @Test
-    void testPersonsByCity() {
-        Map<String, List<ContactPerson>> cityMap = addressBooks.values().stream()
+    void testCountByCity() {
+        Map<String, Long> countByCity = addressBooks.values().stream()
                 .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getCity));
+                .collect(Collectors.groupingBy(ContactPerson::getCity, Collectors.counting()));
 
-        assertEquals(3, cityMap.size());
-        assertEquals(2, cityMap.get("CityA").size());
-        assertEquals("Alice", cityMap.get("CityA").get(0).getFirstName());
-        assertEquals("Charlie", cityMap.get("CityA").get(1).getFirstName());
+        assertEquals(3, countByCity.size());
+        assertEquals(2L, countByCity.get("CityA"));
+        assertEquals(1L, countByCity.get("CityB"));
+        assertEquals(1L, countByCity.get("CityC"));
     }
 
     @Test
-    void testPersonsByState() {
-        Map<String, List<ContactPerson>> stateMap = addressBooks.values().stream()
+    void testCountByState() {
+        Map<String, Long> countByState = addressBooks.values().stream()
                 .flatMap(book -> book.getContacts().stream())
-                .collect(Collectors.groupingBy(ContactPerson::getState));
+                .collect(Collectors.groupingBy(ContactPerson::getState, Collectors.counting()));
 
-        assertEquals(3, stateMap.size());
-        assertEquals(2, stateMap.get("StateX").size());
-        assertEquals("Alice", stateMap.get("StateX").get(0).getFirstName());
-        assertEquals("David", stateMap.get("StateX").get(1).getFirstName());
+        assertEquals(3, countByState.size());
+        assertEquals(2L, countByState.get("StateX"));
+        assertEquals(1L, countByState.get("StateY"));
+        assertEquals(1L, countByState.get("StateZ"));
     }
 }
