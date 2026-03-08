@@ -1,14 +1,14 @@
-# AddressBookApp - UC9: View Persons by City or State
+# AddressBookApp - UC10: Count Persons by City or State
 
 ## Overview
-UC9 extends previous UCs by **viewing all persons grouped by City or State across multiple AddressBooks**.  
-- Maintains **Dictionary (Map)** for City → Persons and State → Persons  
-- Uses **Java Streams** to collect and view data
+UC10 extends previous UCs by **counting the number of contact persons grouped by City and State** across multiple AddressBooks.  
+- Uses **Java Streams** and grouping to compute counts.
 
 ---
 
 ## Notes
 
-- UC9 **reuses previous code**  
-- Supports **in-memory grouping by City/State**  
-- Future UCs will integrate **search, count, and persistence per group**
+- UC10 **reuses previous code**  
+- Supports **in-memory count per City and State**  
+- Useful for analytics and reporting across AddressBooks  
+- Future UCs may integrate **persistence and advanced queries**
