@@ -1,14 +1,14 @@
-# AddressBookApp - UC5: Add Multiple Contacts
+# AddressBookApp - UC6: Multiple AddressBooks
 
 ## Overview
-UC5 extends previous UCs by adding the **ability to add multiple persons** to the AddressBook using console input.  
-Contacts are maintained using a **Collection class (List)**.
+UC6 extends previous UCs by allowing the system to **maintain multiple AddressBooks**, each with a unique name.  
+- Each AddressBook can contain multiple contacts.  
+- A **Dictionary (Map)** is used to store `AddressBookName → AddressBook`.
 
 ---
 
 ## Notes
 
-- UC5 **reuses previous code**  
-- Supports **multiple in-memory contacts**  
-- Contacts are added **one at a time** via console input  
-- Future UCs will add **search, edit, delete, and persistence**
+- UC6 **reuses previous code**  
+- Supports **multiple AddressBooks and multiple contacts** in memory  
+- Future UCs will add **edit, delete, search, and persistence per AddressBook**
