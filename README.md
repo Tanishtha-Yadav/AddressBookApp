@@ -1,15 +1,15 @@
-# AddressBookApp - UC11: Sort Contacts Alphabetically
+# AddressBookApp - UC12: Sort Contacts by City, State, or Zip
 
 ## Overview
-UC11 extends previous UCs by **sorting all contacts alphabetically by Person’s name** within an AddressBook.  
-- Sorting is done by **First Name, then Last Name**  
-- Uses **Java Streams and Collections**  
+UC12 extends previous UCs by **sorting all contacts in an AddressBook by City, State, or Zip**.  
+- Uses **Java Collections and Streams** for sorting.  
+- Provides **console selection** for sorting criteria.
 
 ---
 
 ## Notes
 
-- UC11 **reuses previous code**  
-- Supports **in-memory sorting and display in console**  
+- UC12 **reuses previous code**  
+- Supports **in-memory sorting by multiple fields**  
 - `toString()` is used for nicely formatted output  
-- Future UCs can combine sorting with search or filter functionality
+- Future UCs may integrate sorting across multiple AddressBooks
