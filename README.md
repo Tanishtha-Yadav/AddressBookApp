@@ -1,14 +1,14 @@
-# AddressBookApp - UC8: Search Person by City or State
+# AddressBookApp - UC9: View Persons by City or State
 
 ## Overview
-UC8 extends previous UCs by **searching for a person by city or state across multiple AddressBooks**.  
-- Search can return **multiple contacts** in the same city or state.  
-- Uses **Java Streams** for filtering.
+UC9 extends previous UCs by **viewing all persons grouped by City or State across multiple AddressBooks**.  
+- Maintains **Dictionary (Map)** for City → Persons and State → Persons  
+- Uses **Java Streams** to collect and view data
 
 ---
 
 ## Notes
 
-- UC8 **reuses previous code**  
-- Supports **in-memory search across multiple AddressBooks**  
-- Future UCs will integrate **more advanced queries and persistence**
+- UC9 **reuses previous code**  
+- Supports **in-memory grouping by City/State**  
+- Future UCs will integrate **search, count, and persistence per group**
