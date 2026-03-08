@@ -1,16 +1,12 @@
-# AddressBookApp - UC3: Edit ContactPerson
+# AddressBookApp - UC4: Delete ContactPerson
 
 ## Overview
-UC3 extends UC2 by adding the **ability to edit an existing contact** by first name.  
-Main features:
-
-- Add initial contacts (as in UC2)
-- Edit a contact using **first name** from console input
-- Display updated contacts
+UC4 extends UC3 by adding the **ability to delete an existing contact** by first name using console input.
 
 ---
+
 ## Notes
 
-- UC3 **reuses UC2 code**  
-- Supports editing **in-memory contacts** only  
-- Future UCs will add **delete, search, display, and persistence**
+- UC4 **reuses UC3 code**  
+- Supports deleting **in-memory contacts** only  
+- Future UCs will add **search, display, and persistence**
