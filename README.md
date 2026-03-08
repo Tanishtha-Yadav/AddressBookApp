@@ -1,14 +1,14 @@
-# AddressBookApp - UC6: Multiple AddressBooks
+# AddressBookApp - UC7: Prevent Duplicate Contacts
 
 ## Overview
-UC6 extends previous UCs by allowing the system to **maintain multiple AddressBooks**, each with a unique name.  
-- Each AddressBook can contain multiple contacts.  
-- A **Dictionary (Map)** is used to store `AddressBookName → AddressBook`.
+UC7 extends previous UCs by **preventing duplicate contacts** in an AddressBook.  
+- Duplicate check is based on **first + last name**  
+- **Java Streams** and `equals()` method are used to detect duplicates  
 
 ---
 
 ## Notes
 
-- UC6 **reuses previous code**  
-- Supports **multiple AddressBooks and multiple contacts** in memory  
-- Future UCs will add **edit, delete, search, and persistence per AddressBook**
+- UC7 **reuses previous code**  
+- Supports **in-memory duplicate prevention**  
+- Future UCs will integrate **multiple AddressBooks and persistence**
