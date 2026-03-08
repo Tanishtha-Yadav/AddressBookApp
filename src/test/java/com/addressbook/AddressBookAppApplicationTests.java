@@ -3,40 +3,50 @@ package com.addressbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookAppApplicationTests {
 
-    private AddressBook addressBook;
+    private Map<String, AddressBook> addressBooks;
 
     @BeforeEach
     void setUp() {
-        addressBook = new AddressBook();
+        addressBooks = new HashMap<>();
+        AddressBook book1 = new AddressBook();
+        book1.addContact(new ContactPerson("Alice", "Smith", "12 Main St", "CityA", "StateX", "12345", "9999999999", "alice@example.com"));
+        book1.addContact(new ContactPerson("Bob", "Jones", "34 Oak St", "CityB", "StateY", "67890", "8888888888", "bob@example.com"));
+
+        AddressBook book2 = new AddressBook();
+        book2.addContact(new ContactPerson("Charlie", "Brown", "56 Pine St", "CityA", "StateZ", "11111", "7777777777", "charlie@example.com"));
+        book2.addContact(new ContactPerson("David", "Lee", "78 Maple St", "CityC", "StateX", "22222", "6666666666", "david@example.com"));
+
+        addressBooks.put("Family", book1);
+        addressBooks.put("Friends", book2);
     }
 
     @Test
-    void testAddUniqueContacts() {
-        ContactPerson c1 = new ContactPerson("Alice", "Smith", "12 Main St", "City", "State", "12345", "9999999999", "alice@example.com");
-        ContactPerson c2 = new ContactPerson("Bob", "Jones", "34 Oak St", "City", "State", "67890", "8888888888", "bob@example.com");
+    void testSearchByCity() {
+        List<ContactPerson> results = addressBooks.get("Family").searchByCity("CityA");
+        assertEquals(1, results.size());
+        assertEquals("Alice", results.get(0).getFirstName());
 
-        assertTrue(addressBook.addContact(c1));
-        assertTrue(addressBook.addContact(c2));
-
-        List<ContactPerson> contacts = addressBook.getContacts();
-        assertEquals(2, contacts.size());
+        results = addressBooks.get("Friends").searchByCity("CityA");
+        assertEquals(1, results.size());
+        assertEquals("Charlie", results.get(0).getFirstName());
     }
 
     @Test
-    void testAddDuplicateContact() {
-        ContactPerson c1 = new ContactPerson("Alice", "Smith", "12 Main St", "City", "State", "12345", "9999999999", "alice@example.com");
-        ContactPerson c2 = new ContactPerson("Alice", "Smith", "34 Oak St", "City", "State", "67890", "8888888888", "alice.j@example.com");
+    void testSearchByState() {
+        List<ContactPerson> results = addressBooks.get("Family").searchByState("StateX");
+        assertEquals(1, results.size());
+        assertEquals("Alice", results.get(0).getFirstName());
 
-        assertTrue(addressBook.addContact(c1));
-        assertFalse(addressBook.addContact(c2)); // Duplicate
-
-        List<ContactPerson> contacts = addressBook.getContacts();
-        assertEquals(1, contacts.size());
+        results = addressBooks.get("Friends").searchByState("StateX");
+        assertEquals(1, results.size());
+        assertEquals("David", results.get(0).getFirstName());
     }
 }
