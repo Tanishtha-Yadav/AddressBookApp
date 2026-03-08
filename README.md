@@ -1,14 +1,15 @@
-# AddressBookApp - UC10: Count Persons by City or State
+# AddressBookApp - UC11: Sort Contacts Alphabetically
 
 ## Overview
-UC10 extends previous UCs by **counting the number of contact persons grouped by City and State** across multiple AddressBooks.  
-- Uses **Java Streams** and grouping to compute counts.
+UC11 extends previous UCs by **sorting all contacts alphabetically by Person’s name** within an AddressBook.  
+- Sorting is done by **First Name, then Last Name**  
+- Uses **Java Streams and Collections**  
 
 ---
 
 ## Notes
 
-- UC10 **reuses previous code**  
-- Supports **in-memory count per City and State**  
-- Useful for analytics and reporting across AddressBooks  
-- Future UCs may integrate **persistence and advanced queries**
+- UC11 **reuses previous code**  
+- Supports **in-memory sorting and display in console**  
+- `toString()` is used for nicely formatted output  
+- Future UCs can combine sorting with search or filter functionality
