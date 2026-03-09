@@ -1,10 +1,17 @@
 package com.addressbook;
 
-import java.io.*;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddressBook {
+
     private List<ContactPerson> contacts;
 
     public AddressBook() {
@@ -25,46 +32,41 @@ public class AddressBook {
         return true;
     }
 
-    // UC13: Write AddressBook to file
-    public void writeToFile(String fileName) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+    // Write AddressBook to CSV using OpenCSV
+    public void writeToCSV(String fileName) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(fileName))) {
             for (ContactPerson c : contacts) {
-                String line = String.join(",",
-                        c.getFirstName(),
-                        c.getLastName(),
-                        c.getAddress(),
-                        c.getCity(),
-                        c.getState(),
-                        c.getZip(),
-                        c.getPhoneNumber(),
-                        c.getEmail());
-                bw.write(line);
-                bw.newLine();
+                String[] line = {c.getFirstName(), c.getLastName(), c.getAddress(),
+                                 c.getCity(), c.getState(), c.getZip(),
+                                 c.getPhoneNumber(), c.getEmail()};
+                writer.writeNext(line);
             }
-            System.out.println("AddressBook written to file: " + fileName);
+            System.out.println("AddressBook written to CSV: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error writing file: " + e.getMessage());
+            System.out.println("Error writing CSV: " + e.getMessage());
         }
     }
 
-    // UC13: Read AddressBook from file
-    public void readFromFile(String fileName) {
+    // Read AddressBook from CSV using OpenCSV
+    public void readFromCSV(String fileName) {
         contacts.clear();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length == 8) {
-                    ContactPerson c = new ContactPerson(
-                            data[0], data[1], data[2], data[3],
-                            data[4], data[5], data[6], data[7]
-                    );
-                    contacts.add(c);
-                }
-            }
-            System.out.println("AddressBook read from file: " + fileName);
+        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
+            String[] line;
+            try {
+				while ((line = reader.readNext()) != null) {
+				    if (line.length == 8) {
+				        ContactPerson c = new ContactPerson(line[0], line[1], line[2], line[3],
+				                                            line[4], line[5], line[6], line[7]);
+				        contacts.add(c);
+				    }
+				}
+			} catch (CsvValidationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            System.out.println("AddressBook read from CSV: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+            System.out.println("Error reading CSV: " + e.getMessage());
         }
     }
 }

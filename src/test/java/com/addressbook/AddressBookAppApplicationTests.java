@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AddressBookAppApplicationTests {
 
     private AddressBook addressBook;
-    private final String testFile = "testAddressBook.txt";
+    private final String csvFile = "testAddressBook.csv";
 
     @BeforeEach
     void setUp() {
@@ -22,15 +22,15 @@ class AddressBookAppApplicationTests {
 
     @AfterEach
     void cleanUp() {
-        File file = new File(testFile);
+        File file = new File(csvFile);
         if (file.exists()) file.delete();
     }
 
     @Test
-    void testWriteAndReadFile() {
-        addressBook.writeToFile(testFile);
+    void testWriteAndReadCSV() {
+        addressBook.writeToCSV(csvFile);
         AddressBook newBook = new AddressBook();
-        newBook.readFromFile(testFile);
+        newBook.readFromCSV(csvFile);
 
         assertEquals(addressBook.getContacts().size(), newBook.getContacts().size());
         assertEquals("Alice", newBook.getContacts().get(0).getFirstName());

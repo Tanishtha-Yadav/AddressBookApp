@@ -3,11 +3,12 @@ package com.addressbook;
 import java.util.Scanner;
 
 public class AddressBookAppApplication {
+
     public static void main(String[] args) {
         AddressBook addressBook = new AddressBook();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- UC13: File IO for AddressBook ---");
+        System.out.println("--- UC14: CSV File IO using OpenCSV ---");
 
         boolean addMore = true;
         while (addMore) {
@@ -28,15 +29,15 @@ public class AddressBookAppApplication {
             if (!ans.equals("yes")) addMore = false;
         }
 
-        System.out.print("\nEnter file name to save AddressBook: ");
+        System.out.print("\nEnter CSV file name to save AddressBook: ");
         String fileName = sc.nextLine().trim();
-        addressBook.writeToFile(fileName);
+        addressBook.writeToCSV(fileName);
 
-        System.out.print("\nDo you want to read from the file? (yes/no): ");
+        System.out.print("\nDo you want to read from the CSV file? (yes/no): ");
         String readAns = sc.nextLine().trim().toLowerCase();
         if (readAns.equals("yes")) {
-            addressBook.readFromFile(fileName);
-            System.out.println("\nContacts from file:");
+            addressBook.readFromCSV(fileName);
+            System.out.println("\nContacts from CSV:");
             addressBook.getContacts().forEach(System.out::println);
         }
 
