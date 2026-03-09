@@ -1,15 +1,16 @@
-# AddressBookApp - UC16: Retrieve All Contacts from DB
+# AddressBookApp - UC17: Update Contact Information in DB
 
 ## Overview
-UC16 extends previous UCs by **retrieving all AddressBook entries from a database** using JDBC.  
-- Connects to the database  
-- Retrieves all contacts as **ContactPerson objects**  
+UC17 extends previous UCs by **updating a ContactPerson in the database** using JDBC.  
+- Uses **PreparedStatement** to safely update a contact  
+- Ensures **in-memory data matches DB**  
+- Supports **JUnit test for sync verification**  
 
 ---
 
 ## Notes
 
-- UC16 uses **JDBC** to connect to the DB  
-- Supports **JUnit TDD approach** for testing  
-- Assumes a table `contact_person` exists matching the ContactPerson fields  
-- Future UCs may include **insert, update, delete operations via JDBC**
+- UC17 follows **TDD approach**  
+- Requires **JDBC connection** to DB  
+- Contact equality is based on **first and last name**  
+- Future UCs will add **delete, multi-addressbook, and advanced DB operations**
