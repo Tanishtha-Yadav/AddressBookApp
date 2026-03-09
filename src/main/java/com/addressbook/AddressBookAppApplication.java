@@ -1,5 +1,9 @@
 package com.addressbook;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 public class AddressBookAppApplication {
 
     public static void main(String[] args) {
@@ -9,9 +13,14 @@ public class AddressBookAppApplication {
 
         AddressBookService service = new AddressBookService(jdbcURL, username, password);
 
-        ContactPerson newContact = new ContactPerson("Diana","Prince","Themyscira St","CityD","StateD","77777","4444444444","diana@example.com");
+        // Sample contacts
+        List<ContactPerson> contacts = Arrays.asList(
+            new ContactPerson("Bruce","Wayne","Wayne Manor","Gotham","StateG","11111","1234567890","bruce@example.com"),
+            new ContactPerson("Peter","Parker","Queens St","NYC","StateN","22222","2345678901","peter@example.com"),
+            new ContactPerson("Tony","Stark","Stark Tower","NYC","StateN","33333","3456789012","tony@example.com")
+        );
 
-        boolean success = service.addContactTransaction(newContact, "HeroesBook");
-        System.out.println("Transaction success: " + success);
+        System.out.println("--- Adding Multiple Contacts using Threads ---");
+        service.addMultipleContactsThreaded(contacts, "HeroesBook");
     }
 }

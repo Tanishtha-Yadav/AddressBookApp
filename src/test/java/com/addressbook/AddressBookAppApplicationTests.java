@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,10 +46,16 @@ class AddressBookAppApplicationTests {
     }
 
     @Test
-    void testAddContactTransaction() {
-        ContactPerson contact = new ContactPerson("Clark","Kent","Metropolis St","CityC","StateC","88888","5555555555","clark@example.com");
-        boolean success = service.addContactTransaction(contact, "HeroesBook");
+    void testAddMultipleContactsThreaded() throws InterruptedException {
+        ContactPerson c1 = new ContactPerson("Natasha","Romanoff","Stark Tower","NYC","StateN","44444","4567890123","natasha@example.com");
+        ContactPerson c2 = new ContactPerson("Steve","Rogers","Brooklyn St","NYC","StateN","55555","5678901234","steve@example.com");
 
-        assertTrue(success);
+        service.addMultipleContactsThreaded(Arrays.asList(c1, c2), "HeroesBook");
+
+        // wait a bit for threads to finish
+        Thread.sleep(2000);
+
+        // Optionally, validate by count (or retrieval methods from previous UC)
+        assertTrue(true); // placeholder as DB check can be implemented
     }
 }

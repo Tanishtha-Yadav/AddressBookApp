@@ -1,11 +1,8 @@
 package com.addressbook;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.List;
 
 public class AddressBookService {
 
@@ -19,14 +16,13 @@ public class AddressBookService {
         this.password = password;
     }
 
-    // UC20: Add contact to DB with transaction
+    // Add a single contact transactionally
     public boolean addContactTransaction(ContactPerson contact, String bookName) {
-        String insertPersonSQL = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) " +
-                "VALUES (?,?,?,?,?,?,?,?,?)";
+        String insertPersonSQL = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) VALUES (?,?,?,?,?,?,?,?,?)";
         String insertBookSQL = "INSERT INTO address_book (book_name, contact_id) VALUES (?,?)";
 
         try (Connection conn = DriverManager.getConnection(jdbcURL, username, password)) {
-            conn.setAutoCommit(false); // begin transaction
+            conn.setAutoCommit(false);
 
             try (PreparedStatement psPerson = conn.prepareStatement(insertPersonSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 psPerson.setString(1, contact.getFirstName());
@@ -37,17 +33,14 @@ public class AddressBookService {
                 psPerson.setString(6, contact.getZip());
                 psPerson.setString(7, contact.getPhoneNumber());
                 psPerson.setString(8, contact.getEmail());
-                psPerson.setDate(9, Date.valueOf(java.time.LocalDate.now()));
+                psPerson.setDate(9, Date.valueOf(LocalDate.now()));
 
                 int rowsPerson = psPerson.executeUpdate();
                 if (rowsPerson == 0) throw new SQLException("Failed to insert contact");
 
-                // Get generated contact ID
                 ResultSet generatedKeys = psPerson.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     int contactId = generatedKeys.getInt(1);
-
-                    // Insert into address_book table
                     try (PreparedStatement psBook = conn.prepareStatement(insertBookSQL)) {
                         psBook.setString(1, bookName);
                         psBook.setInt(2, contactId);
@@ -58,11 +51,11 @@ public class AddressBookService {
                     throw new SQLException("Failed to retrieve contact ID");
                 }
 
-                conn.commit(); // commit transaction
+                conn.commit();
                 return true;
 
             } catch (SQLException e) {
-                conn.rollback(); // rollback on any failure
+                conn.rollback();
                 System.out.println("Transaction failed: " + e.getMessage());
                 return false;
             }
@@ -71,5 +64,13 @@ public class AddressBookService {
             System.out.println("DB connection error: " + e.getMessage());
             return false;
         }
+    }
+
+    // UC21: Add multiple contacts using threads
+    public void addMultipleContactsThreaded(List<ContactPerson> contacts, String bookName) {
+        contacts.forEach(contact -> new Thread(() -> {
+            boolean success = addContactTransaction(contact, bookName);
+            System.out.println("Added " + contact.getFirstName() + ": " + success);
+        }).start());
     }
 }
