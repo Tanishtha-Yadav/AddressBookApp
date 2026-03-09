@@ -16,7 +16,6 @@ public class AddressBookService {
         this.password = password;
     }
 
-    // Add a single contact transactionally
     public boolean addContactTransaction(ContactPerson contact, String bookName) {
         String insertPersonSQL = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) VALUES (?,?,?,?,?,?,?,?,?)";
         String insertBookSQL = "INSERT INTO address_book (book_name, contact_id) VALUES (?,?)";
@@ -66,7 +65,6 @@ public class AddressBookService {
         }
     }
 
-    // UC21: Add multiple contacts using threads
     public void addMultipleContactsThreaded(List<ContactPerson> contacts, String bookName) {
         contacts.forEach(contact -> new Thread(() -> {
             boolean success = addContactTransaction(contact, bookName);

@@ -1,6 +1,5 @@
 package com.addressbook;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +12,6 @@ public class AddressBookAppApplication {
 
         AddressBookService service = new AddressBookService(jdbcURL, username, password);
 
-        // Sample contacts
         List<ContactPerson> contacts = Arrays.asList(
             new ContactPerson("Bruce","Wayne","Wayne Manor","Gotham","StateG","11111","1234567890","bruce@example.com"),
             new ContactPerson("Peter","Parker","Queens St","NYC","StateN","22222","2345678901","peter@example.com"),

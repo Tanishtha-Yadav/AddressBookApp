@@ -52,10 +52,8 @@ class AddressBookAppApplicationTests {
 
         service.addMultipleContactsThreaded(Arrays.asList(c1, c2), "HeroesBook");
 
-        // wait a bit for threads to finish
-        Thread.sleep(2000);
+        Thread.sleep(2000); // wait for threads
 
-        // Optionally, validate by count (or retrieval methods from previous UC)
-        assertTrue(true); // placeholder as DB check can be implemented
+        assertTrue(true); // placeholder, DB validation can be added
     }
 }
