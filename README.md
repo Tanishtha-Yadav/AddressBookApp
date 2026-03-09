@@ -1,15 +1,17 @@
-# AddressBookApp - UC23: Add Multiple Entries to JSON Server
+# AddressBookApp - UC24: Update ContactPerson in JSON Server
 
 ## Overview
-UC23 enables adding **multiple contacts** to a JSON Server and **syncing the Address Book memory**.  
-- Uses **REST Assured** to POST contacts to JSON Server  
-- Updates in-memory contacts list in **AddressBookService**  
-- Supports **multiple additions in a loop**  
+UC24 extends UC23 by adding the **ability to update an existing contact** on the JSON Server and keep the **in-memory Address Book** in sync.
+
+Main features:
+
+- Update an existing contact by **ID** on JSON Server using RESTAssured
+- Sync the updated contact in **AddressBookService memory**
+- JUnit test verifies the memory is updated correctly
 
 ---
-
 ## Notes
-- Requires **JSON Server running with /contacts endpoint**  
-- Ensures **memory is always synced** with server after additions  
-- JUnit tests verify **memory sync and server response**  
-- Builds on UC22 fetching capability
+
+- UC24 **reuses UC23 code**  
+- Each `ContactPerson` must have an **`id`** field matching the JSON Server entry  
+- Future UCs will integrate additional features like DB persistence and multi-threading
