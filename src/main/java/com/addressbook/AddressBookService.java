@@ -14,11 +14,61 @@ public class AddressBookService {
 
     private final List<ContactPerson> contacts = new ArrayList<>();
 
-    public List<ContactPerson> getContacts() {
-        return contacts;
+    public List<ContactPerson> getContacts() { return contacts; }
+
+    // Add multiple contacts (UC23)
+    public void addMultipleContactsToJsonServer(String jsonUrl, List<ContactPerson> newContacts) {
+        for (ContactPerson contact : newContacts) {
+            try {
+                given()
+                    .contentType(ContentType.JSON)
+                    .body(contact)
+                    .post(jsonUrl)
+                    .then()
+                    .statusCode(201);
+                contacts.add(contact);
+            } catch (Exception e) {
+                System.out.println("Failed to add " + contact.getFirstName() + ": " + e.getMessage());
+            }
+        }
     }
 
-    // Fetch contacts from JSON server
+    // Update contact (UC24)
+    public void updateContactInJsonServer(String jsonUrl, int contactId, ContactPerson updatedContact) {
+        try {
+            given()
+                .contentType(ContentType.JSON)
+                .body(updatedContact)
+                .put(jsonUrl + "/" + contactId)
+                .then()
+                .statusCode(200);
+
+            for (int i = 0; i < contacts.size(); i++) {
+                if (contacts.get(i).getId() == contactId) {
+                    contacts.set(i, updatedContact);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to update contact: " + e.getMessage());
+        }
+    }
+
+    // Delete contact (UC25)
+    public void deleteContactFromJsonServer(String jsonUrl, int contactId) {
+        try {
+            given()
+                .delete(jsonUrl + "/" + contactId)
+                .then()
+                .statusCode(200);
+
+            contacts.removeIf(contact -> contact.getId() == contactId);
+        } catch (Exception e) {
+            System.out.println("Failed to delete contact: " + e.getMessage());
+        }
+    }
+
+    // Fetch all contacts
     public void fetchContactsFromJsonServer(String jsonUrl) {
         try {
             String response = given()
@@ -32,55 +82,8 @@ public class AddressBookService {
 
             contacts.clear();
             contacts.addAll(retrievedContacts);
-            System.out.println("Fetched " + contacts.size() + " contacts from JSON Server.");
-
         } catch (Exception e) {
             System.out.println("Error fetching contacts: " + e.getMessage());
-        }
-    }
-
-    // Add multiple contacts to JSON Server
-    public void addMultipleContactsToJsonServer(String jsonUrl, List<ContactPerson> newContacts) {
-        newContacts.forEach(contact -> {
-            try {
-                given()
-                        .contentType(ContentType.JSON)
-                        .body(contact)
-                        .post(jsonUrl)
-                        .then()
-                        .statusCode(201);
-
-                contacts.add(contact); // Sync memory
-                System.out.println("Added " + contact.getFirstName() + " to JSON Server and memory.");
-
-            } catch (Exception e) {
-                System.out.println("Failed to add " + contact.getFirstName() + ": " + e.getMessage());
-            }
-        });
-    }
-
-    // UC24: Update contact in JSON Server and sync memory
-    public void updateContactInJsonServer(String jsonUrl, int contactId, ContactPerson updatedContact) {
-        try {
-            // REST call to update contact on JSON Server
-            given()
-                    .contentType(ContentType.JSON)
-                    .body(updatedContact)
-                    .put(jsonUrl + "/" + contactId)
-                    .then()
-                    .statusCode(200);
-
-            // Update in-memory list
-            for (int i = 0; i < contacts.size(); i++) {
-                if (contacts.get(i).getId() == contactId) {
-                    contacts.set(i, updatedContact);
-                    break;
-                }
-            }
-
-            System.out.println("Updated contact " + updatedContact.getFirstName() + " in JSON Server and memory.");
-        } catch (Exception e) {
-            System.out.println("Failed to update contact: " + e.getMessage());
         }
     }
 }

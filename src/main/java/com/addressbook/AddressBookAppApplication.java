@@ -9,17 +9,17 @@ public class AddressBookAppApplication {
         AddressBookService service = new AddressBookService();
         String jsonServerUrl = "http://localhost:3000/contacts";
 
-        // Fetch existing contacts
-        service.fetchContactsFromJsonServer(jsonServerUrl);
+        // Add contact
+        List<ContactPerson> contacts = new ArrayList<>();
+        contacts.add(new ContactPerson(1, "Alice", "Smith", "123 Street", "CityA", "StateA", "12345", "9999999999", "alice@example.com"));
+        service.addMultipleContactsToJsonServer(jsonServerUrl, contacts);
 
-        // Add a new contact
-        List<ContactPerson> newContacts = new ArrayList<>();
-        newContacts.add(new ContactPerson(1, "John", "Doe", "123 Street", "CityA", "StateA", "12345", "9999999999", "john@example.com"));
-        service.addMultipleContactsToJsonServer(jsonServerUrl, newContacts);
+        // Update contact
+        service.updateContactInJsonServer(jsonServerUrl, 1,
+                new ContactPerson(1, "Alice", "Smith", "New Street", "CityA", "StateA", "12345", "9999999999", "alice@example.com"));
 
-        // Update the contact
-        ContactPerson updated = new ContactPerson(1, "John", "Doe", "456 New Street", "CityA", "StateA", "12345", "9999999999", "john@example.com");
-        service.updateContactInJsonServer(jsonServerUrl, 1, updated);
+        // Delete contact
+        service.deleteContactFromJsonServer(jsonServerUrl, 1);
 
         System.out.println("Contacts in memory:");
         service.getContacts().forEach(System.out::println);

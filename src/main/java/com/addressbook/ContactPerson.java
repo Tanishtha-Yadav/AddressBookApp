@@ -3,7 +3,7 @@ package com.addressbook;
 import java.util.Objects;
 
 public class ContactPerson {
-    private int id; // Required for JSON Server update (UC24)
+    private int id; // Required for JSON Server
     private String firstName;
     private String lastName;
     private String address;
@@ -13,7 +13,6 @@ public class ContactPerson {
     private String phoneNumber;
     private String email;
 
-    // Constructor with ID
     public ContactPerson(int id, String firstName, String lastName, String address, String city,
                          String state, String zip, String phoneNumber, String email) {
         this.id = id;
@@ -27,7 +26,6 @@ public class ContactPerson {
         this.email = email;
     }
 
-    // Constructor without ID (for adding new contacts where JSON Server generates ID)
     public ContactPerson(String firstName, String lastName, String address, String city,
                          String state, String zip, String phoneNumber, String email) {
         this(0, firstName, lastName, address, city, state, zip, phoneNumber, email);
@@ -58,8 +56,7 @@ public class ContactPerson {
         if (this == o) return true;
         if (!(o instanceof ContactPerson)) return false;
         ContactPerson that = (ContactPerson) o;
-        return firstName.equals(that.firstName) &&
-               lastName.equals(that.lastName);
+        return firstName.equals(that.firstName) && lastName.equals(that.lastName);
     }
 
     @Override
