@@ -24,48 +24,41 @@ public class ContactPerson {
         this.email = email;
     }
 
-    // Getters and setters
+    // Getters & Setters
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
-
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
-
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
-
     public String getCity() { return city; }
     public void setCity(String city) { this.city = city; }
-
     public String getState() { return state; }
     public void setState(String state) { this.state = state; }
-
     public String getZip() { return zip; }
     public void setZip(String zip) { this.zip = zip; }
-
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    @Override
-    public String toString() {
-        return firstName + " " + lastName + " | " + phoneNumber + " | " + email;
-    }
-
-    // UC7: Equals & HashCode based on first + last name
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ContactPerson)) return false;
         ContactPerson that = (ContactPerson) o;
-        return firstName.equalsIgnoreCase(that.firstName) &&
-               lastName.equalsIgnoreCase(that.lastName);
+        return firstName.equals(that.firstName) &&
+               lastName.equals(that.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(firstName.toLowerCase(), lastName.toLowerCase());
+        return Objects.hash(firstName, lastName);
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName + " | " + address + ", " + city + ", " +
+               state + " " + zip + " | " + phoneNumber + " | " + email;
     }
 }

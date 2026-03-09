@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,6 @@ class AddressBookAppApplicationTests {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Using H2 in-memory database for testing
         String jdbcURL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
         String username = "sa";
         String password = "";
@@ -39,17 +37,25 @@ class AddressBookAppApplicationTests {
 
             stmt.execute("INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email) " +
                     "VALUES ('Alice','Smith','Addr1','CityA','StateX','12345','1111111111','alice@example.com')");
-
-            stmt.execute("INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email) " +
-                    "VALUES ('Bob','Jones','Addr2','CityB','StateY','67890','2222222222','bob@example.com')");
         }
     }
 
     @Test
-    void testGetAllContacts() {
-        List<ContactPerson> contacts = service.getAllContacts();
-        assertEquals(2, contacts.size());
-        assertEquals("Alice", contacts.get(0).getFirstName());
-        assertEquals("Bob", contacts.get(1).getFirstName());
+    void testUpdateContactAndSync() {
+        ContactPerson updated = new ContactPerson("Alice", "Smith", "NewAddr", "NewCity", "NewState", "99999", "9999999999", "alice@new.com");
+        boolean updatedDB = service.updateContact("Alice", updated);
+        assertTrue(updatedDB);
+
+        ContactPerson fromDB = service.getContactByFirstName("Alice");
+        assertNotNull(fromDB);
+        assertEquals(updated.getAddress(), fromDB.getAddress());
+        assertEquals(updated.getCity(), fromDB.getCity());
+        assertEquals(updated.getState(), fromDB.getState());
+        assertEquals(updated.getZip(), fromDB.getZip());
+        assertEquals(updated.getPhoneNumber(), fromDB.getPhoneNumber());
+        assertEquals(updated.getEmail(), fromDB.getEmail());
+
+        // equals() check for firstName + lastName
+        assertEquals(updated, fromDB);
     }
 }
