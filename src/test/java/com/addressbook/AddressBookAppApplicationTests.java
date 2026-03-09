@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,18 +40,21 @@ class AddressBookAppApplicationTests {
 
             service.addContactWithDate(new ContactPerson("Alice","Smith","Addr1","CityA","StateX","12345","1111111111","alice@example.com"), LocalDate.of(2026,3,1));
             service.addContactWithDate(new ContactPerson("Bob","Jones","Addr2","CityB","StateY","67890","2222222222","bob@example.com"), LocalDate.of(2026,3,5));
-            service.addContactWithDate(new ContactPerson("Charlie","Brown","Addr3","CityC","StateZ","54321","3333333333","charlie@example.com"), LocalDate.of(2026,3,10));
+            service.addContactWithDate(new ContactPerson("Charlie","Brown","Addr3","CityA","StateX","54321","3333333333","charlie@example.com"), LocalDate.of(2026,3,10));
         }
     }
 
     @Test
-    void testGetContactsByPeriod() {
-        LocalDate start = LocalDate.of(2026,3,2);
-        LocalDate end = LocalDate.of(2026,3,9);
+    void testGetCountByCity() {
+        Map<String,Integer> cityCounts = service.getCountByCity();
+        assertEquals(2, cityCounts.get("CityA"));
+        assertEquals(1, cityCounts.get("CityB"));
+    }
 
-        List<ContactPerson> contacts = service.getContactsByPeriod(start, end);
-
-        assertEquals(1, contacts.size());
-        assertEquals("Bob", contacts.get(0).getFirstName());
+    @Test
+    void testGetCountByState() {
+        Map<String,Integer> stateCounts = service.getCountByState();
+        assertEquals(2, stateCounts.get("StateX"));
+        assertEquals(1, stateCounts.get("StateY"));
     }
 }

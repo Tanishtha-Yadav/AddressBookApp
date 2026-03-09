@@ -1,9 +1,8 @@
 package com.addressbook;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddressBookService {
 
@@ -17,43 +16,48 @@ public class AddressBookService {
         this.password = password;
     }
 
-    // UC18: Retrieve contacts added between startDate and endDate
-    public List<ContactPerson> getContactsByPeriod(LocalDate startDate, LocalDate endDate) {
-        List<ContactPerson> contacts = new ArrayList<>();
-        String sql = "SELECT first_name, last_name, address, city, state, zip, phone_number, email, date_added " +
-                     "FROM contact_person WHERE date_added BETWEEN ? AND ?";
+    // UC19: Count contacts by City
+    public Map<String, Integer> getCountByCity() {
+        Map<String, Integer> cityCount = new HashMap<>();
+        String sql = "SELECT city, COUNT(*) AS total FROM contact_person GROUP BY city";
 
         try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-            ps.setDate(1, Date.valueOf(startDate));
-            ps.setDate(2, Date.valueOf(endDate));
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    ContactPerson contact = new ContactPerson(
-                            rs.getString("first_name"),
-                            rs.getString("last_name"),
-                            rs.getString("address"),
-                            rs.getString("city"),
-                            rs.getString("state"),
-                            rs.getString("zip"),
-                            rs.getString("phone_number"),
-                            rs.getString("email")
-                    );
-                    contacts.add(contact);
-                }
+            while (rs.next()) {
+                cityCount.put(rs.getString("city"), rs.getInt("total"));
             }
 
         } catch (SQLException e) {
-            System.out.println("Error retrieving contacts by period: " + e.getMessage());
+            System.out.println("Error counting contacts by city: " + e.getMessage());
         }
 
-        return contacts;
+        return cityCount;
     }
 
-    // Helper: Add a contact with date_added
-    public boolean addContactWithDate(ContactPerson contact, LocalDate dateAdded) {
+    // UC19: Count contacts by State
+    public Map<String, Integer> getCountByState() {
+        Map<String, Integer> stateCount = new HashMap<>();
+        String sql = "SELECT state, COUNT(*) AS total FROM contact_person GROUP BY state";
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                stateCount.put(rs.getString("state"), rs.getInt("total"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error counting contacts by state: " + e.getMessage());
+        }
+
+        return stateCount;
+    }
+
+    // Helper: Add contact (reuse from previous UCs)
+    public boolean addContactWithDate(ContactPerson contact, java.time.LocalDate dateAdded) {
         String sql = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) " +
                      "VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
