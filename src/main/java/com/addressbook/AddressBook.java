@@ -1,12 +1,13 @@
 package com.addressbook;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,41 +33,30 @@ public class AddressBook {
         return true;
     }
 
-    // Write AddressBook to CSV using OpenCSV
-    public void writeToCSV(String fileName) {
-        try (CSVWriter writer = new CSVWriter(new FileWriter(fileName))) {
-            for (ContactPerson c : contacts) {
-                String[] line = {c.getFirstName(), c.getLastName(), c.getAddress(),
-                                 c.getCity(), c.getState(), c.getZip(),
-                                 c.getPhoneNumber(), c.getEmail()};
-                writer.writeNext(line);
-            }
-            System.out.println("AddressBook written to CSV: " + fileName);
+    // UC15: Write AddressBook to JSON
+    public void writeToJSON(String fileName) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter(fileName)) {
+            gson.toJson(contacts, writer);
+            System.out.println("AddressBook written to JSON: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error writing CSV: " + e.getMessage());
+            System.out.println("Error writing JSON: " + e.getMessage());
         }
     }
 
-    // Read AddressBook from CSV using OpenCSV
-    public void readFromCSV(String fileName) {
-        contacts.clear();
-        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
-            String[] line;
-            try {
-				while ((line = reader.readNext()) != null) {
-				    if (line.length == 8) {
-				        ContactPerson c = new ContactPerson(line[0], line[1], line[2], line[3],
-				                                            line[4], line[5], line[6], line[7]);
-				        contacts.add(c);
-				    }
-				}
-			} catch (CsvValidationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            System.out.println("AddressBook read from CSV: " + fileName);
+    // UC15: Read AddressBook from JSON
+    public void readFromJSON(String fileName) {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(fileName)) {
+            Type contactListType = new TypeToken<List<ContactPerson>>() {}.getType();
+            List<ContactPerson> readContacts = gson.fromJson(reader, contactListType);
+            contacts.clear();
+            if (readContacts != null) {
+                contacts.addAll(readContacts);
+            }
+            System.out.println("AddressBook read from JSON: " + fileName);
         } catch (IOException e) {
-            System.out.println("Error reading CSV: " + e.getMessage());
+            System.out.println("Error reading JSON: " + e.getMessage());
         }
     }
 }

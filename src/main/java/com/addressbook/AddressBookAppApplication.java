@@ -8,7 +8,7 @@ public class AddressBookAppApplication {
         AddressBook addressBook = new AddressBook();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- UC14: CSV File IO using OpenCSV ---");
+        System.out.println("--- UC15: JSON File IO using Gson ---");
 
         boolean addMore = true;
         while (addMore) {
@@ -29,15 +29,15 @@ public class AddressBookAppApplication {
             if (!ans.equals("yes")) addMore = false;
         }
 
-        System.out.print("\nEnter CSV file name to save AddressBook: ");
+        System.out.print("\nEnter JSON file name to save AddressBook: ");
         String fileName = sc.nextLine().trim();
-        addressBook.writeToCSV(fileName);
+        addressBook.writeToJSON(fileName);
 
-        System.out.print("\nDo you want to read from the CSV file? (yes/no): ");
+        System.out.print("\nDo you want to read from the JSON file? (yes/no): ");
         String readAns = sc.nextLine().trim().toLowerCase();
         if (readAns.equals("yes")) {
-            addressBook.readFromCSV(fileName);
-            System.out.println("\nContacts from CSV:");
+            addressBook.readFromJSON(fileName);
+            System.out.println("\nContacts from JSON:");
             addressBook.getContacts().forEach(System.out::println);
         }
 
