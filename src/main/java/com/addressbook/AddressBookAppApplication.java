@@ -1,6 +1,5 @@
 package com.addressbook;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class AddressBookAppApplication {
@@ -8,7 +7,7 @@ public class AddressBookAppApplication {
         AddressBook addressBook = new AddressBook();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- UC12: Sort Contacts by City, State, or Zip ---");
+        System.out.println("--- UC13: File IO for AddressBook ---");
 
         boolean addMore = true;
         while (addMore) {
@@ -29,23 +28,17 @@ public class AddressBookAppApplication {
             if (!ans.equals("yes")) addMore = false;
         }
 
-        System.out.print("\nSort by (name/city/state/zip): ");
-        String choice = sc.nextLine().trim().toLowerCase();
+        System.out.print("\nEnter file name to save AddressBook: ");
+        String fileName = sc.nextLine().trim();
+        addressBook.writeToFile(fileName);
 
-        List<ContactPerson> sortedList;
-        switch (choice) {
-            case "name" -> sortedList = addressBook.getSortedContacts();
-            case "city" -> sortedList = addressBook.getSortedByCity();
-            case "state" -> sortedList = addressBook.getSortedByState();
-            case "zip" -> sortedList = addressBook.getSortedByZip();
-            default -> {
-                System.out.println("Invalid choice. Sorting by name.");
-                sortedList = addressBook.getSortedContacts();
-            }
+        System.out.print("\nDo you want to read from the file? (yes/no): ");
+        String readAns = sc.nextLine().trim().toLowerCase();
+        if (readAns.equals("yes")) {
+            addressBook.readFromFile(fileName);
+            System.out.println("\nContacts from file:");
+            addressBook.getContacts().forEach(System.out::println);
         }
-
-        System.out.println("\n--- Sorted Contacts ---");
-        sortedList.forEach(System.out::println);
 
         sc.close();
     }
