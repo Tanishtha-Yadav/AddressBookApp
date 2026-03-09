@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,29 +35,23 @@ class AddressBookAppApplicationTests {
                     "state VARCHAR(50)," +
                     "zip VARCHAR(20)," +
                     "phone_number VARCHAR(20)," +
-                    "email VARCHAR(50))");
+                    "email VARCHAR(50)," +
+                    "date_added DATE)");
 
-            stmt.execute("INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email) " +
-                    "VALUES ('Alice','Smith','Addr1','CityA','StateX','12345','1111111111','alice@example.com')");
+            service.addContactWithDate(new ContactPerson("Alice","Smith","Addr1","CityA","StateX","12345","1111111111","alice@example.com"), LocalDate.of(2026,3,1));
+            service.addContactWithDate(new ContactPerson("Bob","Jones","Addr2","CityB","StateY","67890","2222222222","bob@example.com"), LocalDate.of(2026,3,5));
+            service.addContactWithDate(new ContactPerson("Charlie","Brown","Addr3","CityC","StateZ","54321","3333333333","charlie@example.com"), LocalDate.of(2026,3,10));
         }
     }
 
     @Test
-    void testUpdateContactAndSync() {
-        ContactPerson updated = new ContactPerson("Alice", "Smith", "NewAddr", "NewCity", "NewState", "99999", "9999999999", "alice@new.com");
-        boolean updatedDB = service.updateContact("Alice", updated);
-        assertTrue(updatedDB);
+    void testGetContactsByPeriod() {
+        LocalDate start = LocalDate.of(2026,3,2);
+        LocalDate end = LocalDate.of(2026,3,9);
 
-        ContactPerson fromDB = service.getContactByFirstName("Alice");
-        assertNotNull(fromDB);
-        assertEquals(updated.getAddress(), fromDB.getAddress());
-        assertEquals(updated.getCity(), fromDB.getCity());
-        assertEquals(updated.getState(), fromDB.getState());
-        assertEquals(updated.getZip(), fromDB.getZip());
-        assertEquals(updated.getPhoneNumber(), fromDB.getPhoneNumber());
-        assertEquals(updated.getEmail(), fromDB.getEmail());
+        List<ContactPerson> contacts = service.getContactsByPeriod(start, end);
 
-        // equals() check for firstName + lastName
-        assertEquals(updated, fromDB);
+        assertEquals(1, contacts.size());
+        assertEquals("Bob", contacts.get(0).getFirstName());
     }
 }

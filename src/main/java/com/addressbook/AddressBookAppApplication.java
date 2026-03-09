@@ -1,20 +1,30 @@
 package com.addressbook;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AddressBookAppApplication {
 
     public static void main(String[] args) {
-
-        // Example DB: H2 in-memory
-        String jdbcURL = "jdbc:h2:~/addressbookdb";
+        String jdbcURL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
         String username = "sa";
         String password = "";
 
         AddressBookService service = new AddressBookService(jdbcURL, username, password);
-        List<ContactPerson> contacts = service.getAllContacts();
 
-        System.out.println("--- UC16: Retrieve All Contacts from DB ---");
+        System.out.println("--- UC18: Retrieve Contacts by Period ---");
+
+        // Example: Add contacts with specific dates
+        service.addContactWithDate(new ContactPerson("Alice","Smith","Addr1","CityA","StateX","12345","1111111111","alice@example.com"), LocalDate.of(2026,3,1));
+        service.addContactWithDate(new ContactPerson("Bob","Jones","Addr2","CityB","StateY","67890","2222222222","bob@example.com"), LocalDate.of(2026,3,5));
+        service.addContactWithDate(new ContactPerson("Charlie","Brown","Addr3","CityC","StateZ","54321","3333333333","charlie@example.com"), LocalDate.of(2026,3,10));
+
+        // Retrieve contacts added from 2026-03-02 to 2026-03-09
+        LocalDate start = LocalDate.of(2026,3,2);
+        LocalDate end = LocalDate.of(2026,3,9);
+
+        List<ContactPerson> contacts = service.getContactsByPeriod(start, end);
+        System.out.println("Contacts added between " + start + " and " + end + ":");
         contacts.forEach(System.out::println);
     }
 }

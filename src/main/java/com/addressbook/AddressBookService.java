@@ -1,6 +1,7 @@
 package com.addressbook;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,70 +17,21 @@ public class AddressBookService {
         this.password = password;
     }
 
-    public List<ContactPerson> getAllContacts() {
+    // UC18: Retrieve contacts added between startDate and endDate
+    public List<ContactPerson> getContactsByPeriod(LocalDate startDate, LocalDate endDate) {
         List<ContactPerson> contacts = new ArrayList<>();
-        String sql = "SELECT first_name, last_name, address, city, state, zip, phone_number, email FROM contact_person";
-
-        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                ContactPerson contact = new ContactPerson(
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("address"),
-                        rs.getString("city"),
-                        rs.getString("state"),
-                        rs.getString("zip"),
-                        rs.getString("phone_number"),
-                        rs.getString("email")
-                );
-                contacts.add(contact);
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error retrieving contacts: " + e.getMessage());
-        }
-        return contacts;
-    }
-
-    // UC17: Update Contact in DB and ensure in-memory sync
-    public boolean updateContact(String firstName, ContactPerson updatedContact) {
-        String sql = "UPDATE contact_person SET address=?, city=?, state=?, zip=?, phone_number=?, email=? " +
-                     "WHERE first_name=?";
+        String sql = "SELECT first_name, last_name, address, city, state, zip, phone_number, email, date_added " +
+                     "FROM contact_person WHERE date_added BETWEEN ? AND ?";
 
         try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, updatedContact.getAddress());
-            ps.setString(2, updatedContact.getCity());
-            ps.setString(3, updatedContact.getState());
-            ps.setString(4, updatedContact.getZip());
-            ps.setString(5, updatedContact.getPhoneNumber());
-            ps.setString(6, updatedContact.getEmail());
-            ps.setString(7, firstName);
+            ps.setDate(1, Date.valueOf(startDate));
+            ps.setDate(2, Date.valueOf(endDate));
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (SQLException e) {
-            System.out.println("Error updating contact: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Retrieve specific contact for sync check
-    public ContactPerson getContactByFirstName(String firstName) {
-        String sql = "SELECT first_name, last_name, address, city, state, zip, phone_number, email " +
-                     "FROM contact_person WHERE first_name=?";
-        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, firstName);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new ContactPerson(
+                while (rs.next()) {
+                    ContactPerson contact = new ContactPerson(
                             rs.getString("first_name"),
                             rs.getString("last_name"),
                             rs.getString("address"),
@@ -89,11 +41,40 @@ public class AddressBookService {
                             rs.getString("phone_number"),
                             rs.getString("email")
                     );
+                    contacts.add(contact);
                 }
             }
+
         } catch (SQLException e) {
-            System.out.println("Error retrieving contact: " + e.getMessage());
+            System.out.println("Error retrieving contacts by period: " + e.getMessage());
         }
-        return null;
+
+        return contacts;
+    }
+
+    // Helper: Add a contact with date_added
+    public boolean addContactWithDate(ContactPerson contact, LocalDate dateAdded) {
+        String sql = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) " +
+                     "VALUES (?,?,?,?,?,?,?,?,?)";
+        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, contact.getFirstName());
+            ps.setString(2, contact.getLastName());
+            ps.setString(3, contact.getAddress());
+            ps.setString(4, contact.getCity());
+            ps.setString(5, contact.getState());
+            ps.setString(6, contact.getZip());
+            ps.setString(7, contact.getPhoneNumber());
+            ps.setString(8, contact.getEmail());
+            ps.setDate(9, Date.valueOf(dateAdded));
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error adding contact: " + e.getMessage());
+            return false;
+        }
     }
 }
