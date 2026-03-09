@@ -1,39 +1,55 @@
 package com.addressbook;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AddressBookAppApplicationTests {
 
-    private AddressBook addressBook;
-    private final String jsonFile = "testAddressBook.json";
+    private AddressBookService service;
 
     @BeforeEach
-    void setUp() {
-        addressBook = new AddressBook();
-        addressBook.addContact(new ContactPerson("Alice", "Smith", "Addr1", "CityA", "StateX", "12345", "1111111111", "alice@example.com"));
-        addressBook.addContact(new ContactPerson("Bob", "Jones", "Addr2", "CityB", "StateY", "67890", "2222222222", "bob@example.com"));
-    }
+    void setUp() throws Exception {
+        // Using H2 in-memory database for testing
+        String jdbcURL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
+        String username = "sa";
+        String password = "";
 
-    @AfterEach
-    void cleanUp() {
-        File file = new File(jsonFile);
-        if (file.exists()) file.delete();
+        service = new AddressBookService(jdbcURL, username, password);
+
+        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
+             Statement stmt = conn.createStatement()) {
+
+            stmt.execute("CREATE TABLE IF NOT EXISTS contact_person (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT," +
+                    "first_name VARCHAR(50)," +
+                    "last_name VARCHAR(50)," +
+                    "address VARCHAR(100)," +
+                    "city VARCHAR(50)," +
+                    "state VARCHAR(50)," +
+                    "zip VARCHAR(20)," +
+                    "phone_number VARCHAR(20)," +
+                    "email VARCHAR(50))");
+
+            stmt.execute("INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email) " +
+                    "VALUES ('Alice','Smith','Addr1','CityA','StateX','12345','1111111111','alice@example.com')");
+
+            stmt.execute("INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email) " +
+                    "VALUES ('Bob','Jones','Addr2','CityB','StateY','67890','2222222222','bob@example.com')");
+        }
     }
 
     @Test
-    void testWriteAndReadJSON() {
-        addressBook.writeToJSON(jsonFile);
-        AddressBook newBook = new AddressBook();
-        newBook.readFromJSON(jsonFile);
-
-        assertEquals(addressBook.getContacts().size(), newBook.getContacts().size());
-        assertEquals("Alice", newBook.getContacts().get(0).getFirstName());
-        assertEquals("Bob", newBook.getContacts().get(1).getFirstName());
+    void testGetAllContacts() {
+        List<ContactPerson> contacts = service.getAllContacts();
+        assertEquals(2, contacts.size());
+        assertEquals("Alice", contacts.get(0).getFirstName());
+        assertEquals("Bob", contacts.get(1).getFirstName());
     }
 }

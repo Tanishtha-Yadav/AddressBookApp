@@ -1,46 +1,20 @@
 package com.addressbook;
 
-import java.util.Scanner;
+import java.util.List;
 
 public class AddressBookAppApplication {
 
     public static void main(String[] args) {
-        AddressBook addressBook = new AddressBook();
-        Scanner sc = new Scanner(System.in);
 
-        System.out.println("--- UC15: JSON File IO using Gson ---");
+        // Example DB: H2 in-memory
+        String jdbcURL = "jdbc:h2:~/addressbookdb";
+        String username = "sa";
+        String password = "";
 
-        boolean addMore = true;
-        while (addMore) {
-            System.out.print("First Name: "); String fn = sc.nextLine();
-            System.out.print("Last Name: "); String ln = sc.nextLine();
-            System.out.print("Address: "); String addr = sc.nextLine();
-            System.out.print("City: "); String city = sc.nextLine();
-            System.out.print("State: "); String state = sc.nextLine();
-            System.out.print("Zip: "); String zip = sc.nextLine();
-            System.out.print("Phone: "); String phone = sc.nextLine();
-            System.out.print("Email: "); String email = sc.nextLine();
+        AddressBookService service = new AddressBookService(jdbcURL, username, password);
+        List<ContactPerson> contacts = service.getAllContacts();
 
-            ContactPerson contact = new ContactPerson(fn, ln, addr, city, state, zip, phone, email);
-            addressBook.addContact(contact);
-
-            System.out.print("Add another contact? (yes/no): ");
-            String ans = sc.nextLine().trim().toLowerCase();
-            if (!ans.equals("yes")) addMore = false;
-        }
-
-        System.out.print("\nEnter JSON file name to save AddressBook: ");
-        String fileName = sc.nextLine().trim();
-        addressBook.writeToJSON(fileName);
-
-        System.out.print("\nDo you want to read from the JSON file? (yes/no): ");
-        String readAns = sc.nextLine().trim().toLowerCase();
-        if (readAns.equals("yes")) {
-            addressBook.readFromJSON(fileName);
-            System.out.println("\nContacts from JSON:");
-            addressBook.getContacts().forEach(System.out::println);
-        }
-
-        sc.close();
+        System.out.println("--- UC16: Retrieve All Contacts from DB ---");
+        contacts.forEach(System.out::println);
     }
 }
