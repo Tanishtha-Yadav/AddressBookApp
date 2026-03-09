@@ -7,9 +7,9 @@ public class AddressBookAppApplication {
     public static void main(String[] args) {
 
         // Example DB: H2 in-memory
-        String jdbcURL = "jdbc:h2:~/addressbookdb";
-        String username = "sa";
-        String password = "";
+        String jdbcURL = "jdbc:mysql://localhost:3306/address_book?useSSL=false&serverTimezone=UTC";
+        String username = "root";
+        String password = "Tanishtha@687";
 
         AddressBookService service = new AddressBookService(jdbcURL, username, password);
         List<ContactPerson> contacts = service.getAllContacts();

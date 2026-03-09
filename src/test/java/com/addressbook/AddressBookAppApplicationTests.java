@@ -15,9 +15,9 @@ class AddressBookAppApplicationTests {
 
     @BeforeEach
     void setUp() throws Exception {
-        String jdbcURL = "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1";
-        String username = "sa";
-        String password = "";
+        String jdbcURL = "jdbc:mysql://localhost:3306/address_book?useSSL=false&serverTimezone=UTC";
+        String username = "root";
+        String password = "Tanishtha@687";
 
         service = new AddressBookService(jdbcURL, username, password);
 
