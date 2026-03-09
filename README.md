@@ -1,15 +1,15 @@
-# AddressBookApp - UC20: Add New Contact to Database (Transactional)
+# AddressBookApp - UC21: Add Multiple Contacts to Database with Threads
 
 ## Overview
-UC20 adds the ability to **insert a new ContactPerson into the AddressBook database** using JDBC with transaction support.  
-- Uses **PreparedStatement** for safe insertion  
-- Supports **multiple tables** and ensures **rollback on failure**  
-- JUnit tests verify **successful transaction**
+UC21 extends the AddressBook System by **adding multiple contacts concurrently** to the database using JDBC.  
+- Each contact insertion is **transactional**, ensuring rollback on failure  
+- Java **Threads** are used to simulate simultaneous insertions  
+- Supports multiple tables (e.g., `contact_person` + `address_book`)  
 
 ---
 
 ## Notes
 
-- UC20 continues **TDD approach**  
-- Ensures **data consistency across multiple tables**  
-- Future UCs may include **batch insert, advanced transaction handling, or stored procedures**
+- UC21 continues **TDD approach**  
+- Demonstrates **thread-safe and transactional inserts**  
+- Future UCs may include **batch processing, concurrency control, or performance testing**
