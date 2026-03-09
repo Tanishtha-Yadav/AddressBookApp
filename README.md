@@ -1,15 +1,14 @@
-# AddressBookApp - UC12: Sort Contacts by City, State, or Zip
+# AddressBookApp - UC13: File IO for AddressBook
 
 ## Overview
-UC12 extends previous UCs by **sorting all contacts in an AddressBook by City, State, or Zip**.  
-- Uses **Java Collections and Streams** for sorting.  
-- Provides **console selection** for sorting criteria.
+UC13 extends previous UCs by **reading and writing the AddressBook to a file** using Java File IO.  
+- Supports saving all contacts to a **text file**  
+- Supports loading contacts from a **text file** back into the AddressBook
 
 ---
 
 ## Notes
 
-- UC12 **reuses previous code**  
-- Supports **in-memory sorting by multiple fields**  
-- `toString()` is used for nicely formatted output  
-- Future UCs may integrate sorting across multiple AddressBooks
+- UC13 **reuses previous code**  
+- Supports **in-memory AddressBook persistence via file**  
+- Future UCs may integrate **database or cloud storage**
