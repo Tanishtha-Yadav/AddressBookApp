@@ -1,14 +1,15 @@
-# AddressBookApp - UC13: File IO for AddressBook
+# AddressBookApp - UC14: CSV File IO using OpenCSV
 
 ## Overview
-UC13 extends previous UCs by **reading and writing the AddressBook to a file** using Java File IO.  
-- Supports saving all contacts to a **text file**  
-- Supports loading contacts from a **text file** back into the AddressBook
+UC14 extends previous UCs by **reading and writing the AddressBook in CSV format** using OpenCSV.  
+- Supports saving all contacts to a **CSV file**  
+- Supports loading contacts from a **CSV file** back into the AddressBook
 
 ---
 
 ## Notes
 
-- UC13 **reuses previous code**  
-- Supports **in-memory AddressBook persistence via file**  
-- Future UCs may integrate **database or cloud storage**
+- UC14 **reuses previous code**  
+- Requires **OpenCSV library**  
+- Supports **in-memory AddressBook persistence via CSV**  
+- Future UCs may integrate **JSON or database support**
