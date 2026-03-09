@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,23 +36,19 @@ class AddressBookAppApplicationTests {
                     "email VARCHAR(50)," +
                     "date_added DATE)");
 
-            service.addContactWithDate(new ContactPerson("Alice","Smith","Addr1","CityA","StateX","12345","1111111111","alice@example.com"), LocalDate.of(2026,3,1));
-            service.addContactWithDate(new ContactPerson("Bob","Jones","Addr2","CityB","StateY","67890","2222222222","bob@example.com"), LocalDate.of(2026,3,5));
-            service.addContactWithDate(new ContactPerson("Charlie","Brown","Addr3","CityA","StateX","54321","3333333333","charlie@example.com"), LocalDate.of(2026,3,10));
+            stmt.execute("CREATE TABLE IF NOT EXISTS address_book (" +
+                    "id INT PRIMARY KEY AUTO_INCREMENT," +
+                    "book_name VARCHAR(50)," +
+                    "contact_id INT," +
+                    "FOREIGN KEY (contact_id) REFERENCES contact_person(id))");
         }
     }
 
     @Test
-    void testGetCountByCity() {
-        Map<String,Integer> cityCounts = service.getCountByCity();
-        assertEquals(2, cityCounts.get("CityA"));
-        assertEquals(1, cityCounts.get("CityB"));
-    }
+    void testAddContactTransaction() {
+        ContactPerson contact = new ContactPerson("Clark","Kent","Metropolis St","CityC","StateC","88888","5555555555","clark@example.com");
+        boolean success = service.addContactTransaction(contact, "HeroesBook");
 
-    @Test
-    void testGetCountByState() {
-        Map<String,Integer> stateCounts = service.getCountByState();
-        assertEquals(2, stateCounts.get("StateX"));
-        assertEquals(1, stateCounts.get("StateY"));
+        assertTrue(success);
     }
 }

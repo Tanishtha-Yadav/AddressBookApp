@@ -1,8 +1,11 @@
 package com.addressbook;
 
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class AddressBookService {
 
@@ -16,68 +19,56 @@ public class AddressBookService {
         this.password = password;
     }
 
-    // UC19: Count contacts by City
-    public Map<String, Integer> getCountByCity() {
-        Map<String, Integer> cityCount = new HashMap<>();
-        String sql = "SELECT city, COUNT(*) AS total FROM contact_person GROUP BY city";
+    // UC20: Add contact to DB with transaction
+    public boolean addContactTransaction(ContactPerson contact, String bookName) {
+        String insertPersonSQL = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) " +
+                "VALUES (?,?,?,?,?,?,?,?,?)";
+        String insertBookSQL = "INSERT INTO address_book (book_name, contact_id) VALUES (?,?)";
 
-        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password)) {
+            conn.setAutoCommit(false); // begin transaction
 
-            while (rs.next()) {
-                cityCount.put(rs.getString("city"), rs.getInt("total"));
+            try (PreparedStatement psPerson = conn.prepareStatement(insertPersonSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                psPerson.setString(1, contact.getFirstName());
+                psPerson.setString(2, contact.getLastName());
+                psPerson.setString(3, contact.getAddress());
+                psPerson.setString(4, contact.getCity());
+                psPerson.setString(5, contact.getState());
+                psPerson.setString(6, contact.getZip());
+                psPerson.setString(7, contact.getPhoneNumber());
+                psPerson.setString(8, contact.getEmail());
+                psPerson.setDate(9, Date.valueOf(java.time.LocalDate.now()));
+
+                int rowsPerson = psPerson.executeUpdate();
+                if (rowsPerson == 0) throw new SQLException("Failed to insert contact");
+
+                // Get generated contact ID
+                ResultSet generatedKeys = psPerson.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    int contactId = generatedKeys.getInt(1);
+
+                    // Insert into address_book table
+                    try (PreparedStatement psBook = conn.prepareStatement(insertBookSQL)) {
+                        psBook.setString(1, bookName);
+                        psBook.setInt(2, contactId);
+                        int rowsBook = psBook.executeUpdate();
+                        if (rowsBook == 0) throw new SQLException("Failed to insert into address_book");
+                    }
+                } else {
+                    throw new SQLException("Failed to retrieve contact ID");
+                }
+
+                conn.commit(); // commit transaction
+                return true;
+
+            } catch (SQLException e) {
+                conn.rollback(); // rollback on any failure
+                System.out.println("Transaction failed: " + e.getMessage());
+                return false;
             }
 
         } catch (SQLException e) {
-            System.out.println("Error counting contacts by city: " + e.getMessage());
-        }
-
-        return cityCount;
-    }
-
-    // UC19: Count contacts by State
-    public Map<String, Integer> getCountByState() {
-        Map<String, Integer> stateCount = new HashMap<>();
-        String sql = "SELECT state, COUNT(*) AS total FROM contact_person GROUP BY state";
-
-        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-
-            while (rs.next()) {
-                stateCount.put(rs.getString("state"), rs.getInt("total"));
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error counting contacts by state: " + e.getMessage());
-        }
-
-        return stateCount;
-    }
-
-    // Helper: Add contact (reuse from previous UCs)
-    public boolean addContactWithDate(ContactPerson contact, java.time.LocalDate dateAdded) {
-        String sql = "INSERT INTO contact_person (first_name,last_name,address,city,state,zip,phone_number,email,date_added) " +
-                     "VALUES (?,?,?,?,?,?,?,?,?)";
-        try (Connection conn = DriverManager.getConnection(jdbcURL, username, password);
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, contact.getFirstName());
-            ps.setString(2, contact.getLastName());
-            ps.setString(3, contact.getAddress());
-            ps.setString(4, contact.getCity());
-            ps.setString(5, contact.getState());
-            ps.setString(6, contact.getZip());
-            ps.setString(7, contact.getPhoneNumber());
-            ps.setString(8, contact.getEmail());
-            ps.setDate(9, Date.valueOf(dateAdded));
-
-            int rows = ps.executeUpdate();
-            return rows > 0;
-
-        } catch (SQLException e) {
-            System.out.println("Error adding contact: " + e.getMessage());
+            System.out.println("DB connection error: " + e.getMessage());
             return false;
         }
     }
