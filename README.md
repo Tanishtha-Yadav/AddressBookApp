@@ -1,17 +1,17 @@
-# AddressBookApp - UC24: Update ContactPerson in JSON Server
+# AddressBookApp - UC25: Delete ContactPerson in JSON Server
 
 ## Overview
-UC24 extends UC23 by adding the **ability to update an existing contact** on the JSON Server and keep the **in-memory Address Book** in sync.
+UC25 extends UC24 by adding the **ability to delete an existing contact** on the JSON Server and keep the **in-memory Address Book** in sync.
 
 Main features:
 
-- Update an existing contact by **ID** on JSON Server using RESTAssured
-- Sync the updated contact in **AddressBookService memory**
+- Delete an existing contact by **ID** from JSON Server using RESTAssured
+- Remove the deleted contact from **AddressBookService memory**
 - JUnit test verifies the memory is updated correctly
 
 ---
 ## Notes
 
-- UC24 **reuses UC23 code**  
+- UC25 **reuses UC23 & UC24 code**  
 - Each `ContactPerson` must have an **`id`** field matching the JSON Server entry  
-- Future UCs will integrate additional features like DB persistence and multi-threading
+- Future UCs will integrate additional features like database persistence and multi-threading
