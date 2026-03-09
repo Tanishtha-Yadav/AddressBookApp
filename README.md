@@ -1,15 +1,15 @@
-# AddressBookApp - UC19: Count Contacts by City or State
+# AddressBookApp - UC20: Add New Contact to Database (Transactional)
 
 ## Overview
-UC19 extends the AddressBook System by **retrieving the number of contacts grouped by City or State** using JDBC.  
-- Uses **COUNT(*) and GROUP BY** SQL functions  
-- Supports **PreparedStatement** or plain Statement for safe execution  
-- JUnit tests verify correct counts for city and state  
+UC20 adds the ability to **insert a new ContactPerson into the AddressBook database** using JDBC with transaction support.  
+- Uses **PreparedStatement** for safe insertion  
+- Supports **multiple tables** and ensures **rollback on failure**  
+- JUnit tests verify **successful transaction**
 
 ---
 
 ## Notes
 
-- UC19 continues **TDD approach**  
-- Works with any **JDBC-supported database**  
-- Future UCs may include **combined filters, reporting, and analytics**
+- UC20 continues **TDD approach**  
+- Ensures **data consistency across multiple tables**  
+- Future UCs may include **batch insert, advanced transaction handling, or stored procedures**
