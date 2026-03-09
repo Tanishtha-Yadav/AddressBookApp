@@ -1,15 +1,15 @@
-# AddressBookApp - UC21: Add Multiple Contacts to Database with Threads
+# AddressBookApp - UC22: Retrieve Entries from JSON Server
 
 ## Overview
-UC21 extends the AddressBook System by **adding multiple contacts concurrently** to the database using JDBC.  
-- Each contact insertion is **transactional**, ensuring rollback on failure  
-- Java **Threads** are used to simulate simultaneous insertions  
-- Supports multiple tables (e.g., `contact_person` + `address_book`)  
+UC22 adds the ability to **read Address Book contacts from a JSON Server** and update the in-memory Address Book.  
+- Uses **REST Assured** for REST API calls  
+- Parses JSON into **ContactPerson objects**  
+- Updates **AddressBookService memory** with retrieved contacts  
 
 ---
 
 ## Notes
-
-- UC21 continues **TDD approach**  
-- Demonstrates **thread-safe and transactional inserts**  
-- Future UCs may include **batch processing, concurrency control, or performance testing**
+- Requires JSON Server running with `/contacts` endpoint  
+- Ensures **memory sync** with latest server data  
+- Supports TDD with **JUnit + REST Assured** tests  
+- Future UCs may include **update, delete, or push back to JSON Server**
