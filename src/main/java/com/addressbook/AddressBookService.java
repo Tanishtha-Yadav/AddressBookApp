@@ -8,7 +8,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-// Static import for REST Assured given()
 import static io.restassured.RestAssured.given;
 
 public class AddressBookService {
@@ -19,7 +18,7 @@ public class AddressBookService {
         return contacts;
     }
 
-    // Fetch contacts from JSON server and update memory
+    // Fetch contacts from JSON server
     public void fetchContactsFromJsonServer(String jsonUrl) {
         try {
             String response = given()
@@ -40,7 +39,7 @@ public class AddressBookService {
         }
     }
 
-    // UC23: Add multiple contacts to JSON Server and sync memory
+    // Add multiple contacts to JSON Server
     public void addMultipleContactsToJsonServer(String jsonUrl, List<ContactPerson> newContacts) {
         newContacts.forEach(contact -> {
             try {
@@ -49,7 +48,7 @@ public class AddressBookService {
                         .body(contact)
                         .post(jsonUrl)
                         .then()
-                        .statusCode(201); // JSON Server returns 201 on successful creation
+                        .statusCode(201);
 
                 contacts.add(contact); // Sync memory
                 System.out.println("Added " + contact.getFirstName() + " to JSON Server and memory.");
@@ -58,5 +57,30 @@ public class AddressBookService {
                 System.out.println("Failed to add " + contact.getFirstName() + ": " + e.getMessage());
             }
         });
+    }
+
+    // UC24: Update contact in JSON Server and sync memory
+    public void updateContactInJsonServer(String jsonUrl, int contactId, ContactPerson updatedContact) {
+        try {
+            // REST call to update contact on JSON Server
+            given()
+                    .contentType(ContentType.JSON)
+                    .body(updatedContact)
+                    .put(jsonUrl + "/" + contactId)
+                    .then()
+                    .statusCode(200);
+
+            // Update in-memory list
+            for (int i = 0; i < contacts.size(); i++) {
+                if (contacts.get(i).getId() == contactId) {
+                    contacts.set(i, updatedContact);
+                    break;
+                }
+            }
+
+            System.out.println("Updated contact " + updatedContact.getFirstName() + " in JSON Server and memory.");
+        } catch (Exception e) {
+            System.out.println("Failed to update contact: " + e.getMessage());
+        }
     }
 }

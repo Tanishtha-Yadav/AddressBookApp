@@ -2,21 +2,26 @@ package com.addressbook;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 
 class AddressBookAppApplicationTests {
 
     @Test
-    void testAddMultipleContacts() {
+    void testUpdateContactInJsonServer() {
         AddressBookService service = new AddressBookService();
         String jsonServerUrl = "http://localhost:3000/contacts";
 
-        List<ContactPerson> contacts = new ArrayList<>();
-        contacts.add(new ContactPerson("Test", "User", "Street", "City", "State", "00000", "1111111111", "test@example.com"));
+        // Add a contact first
+        ContactPerson contact = new ContactPerson(1, "Test", "User", "Old Street", "CityX", "StateX", "00000", "1111111111", "test@example.com");
+        service.addMultipleContactsToJsonServer(jsonServerUrl, List.of(contact));
 
-        service.addMultipleContactsToJsonServer(jsonServerUrl, contacts);
+        // Update the contact
+        ContactPerson updated = new ContactPerson(1, "Test", "User", "New Street", "CityX", "StateX", "00000", "1111111111", "test@example.com");
+        service.updateContactInJsonServer(jsonServerUrl, 1, updated);
 
-        assert service.getContacts().size() == contacts.size();
+        // Verify in-memory update
+        assertEquals("New Street", service.getContacts().get(0).getAddress());
     }
 }

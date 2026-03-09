@@ -3,6 +3,7 @@ package com.addressbook;
 import java.util.Objects;
 
 public class ContactPerson {
+    private int id; // Required for JSON Server update (UC24)
     private String firstName;
     private String lastName;
     private String address;
@@ -12,8 +13,10 @@ public class ContactPerson {
     private String phoneNumber;
     private String email;
 
-    public ContactPerson(String firstName, String lastName, String address, String city,
+    // Constructor with ID
+    public ContactPerson(int id, String firstName, String lastName, String address, String city,
                          String state, String zip, String phoneNumber, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -24,7 +27,15 @@ public class ContactPerson {
         this.email = email;
     }
 
+    // Constructor without ID (for adding new contacts where JSON Server generates ID)
+    public ContactPerson(String firstName, String lastName, String address, String city,
+                         String state, String zip, String phoneNumber, String email) {
+        this(0, firstName, lastName, address, city, state, zip, phoneNumber, email);
+    }
+
     // Getters & Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
@@ -58,7 +69,7 @@ public class ContactPerson {
 
     @Override
     public String toString() {
-        return firstName + " " + lastName + " | " + address + ", " + city + ", " +
+        return id + " | " + firstName + " " + lastName + " | " + address + ", " + city + ", " +
                state + " " + zip + " | " + phoneNumber + " | " + email;
     }
 }
