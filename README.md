@@ -1,15 +1,15 @@
-# AddressBookApp - UC14: CSV File IO using OpenCSV
+# AddressBookApp - UC15: JSON File IO using Gson
 
 ## Overview
-UC14 extends previous UCs by **reading and writing the AddressBook in CSV format** using OpenCSV.  
-- Supports saving all contacts to a **CSV file**  
-- Supports loading contacts from a **CSV file** back into the AddressBook
+UC15 extends previous UCs by **reading and writing the AddressBook in JSON format** using Gson.  
+- Supports saving all contacts to a **JSON file**  
+- Supports loading contacts from a **JSON file** back into the AddressBook
 
 ---
 
 ## Notes
 
-- UC14 **reuses previous code**  
-- Requires **OpenCSV library**  
-- Supports **in-memory AddressBook persistence via CSV**  
-- Future UCs may integrate **JSON or database support**
+- UC15 **reuses previous code**  
+- Requires **Gson library**  
+- Supports **in-memory AddressBook persistence via JSON**  
+- Future UCs may integrate **database or cloud storage**
